@@ -3,23 +3,27 @@ name: Verified Agent
 on: workflow_dispatch
 
 jobs:
- build:
-  runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
-  steps:
-   - uses: actions/checkout@v3
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-   - name: Install Verified Agent Identity
-     run: clawhub install verified-agent-identity
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-   - name: Install dependencies
-     run: |
-      cd scripts
-      npm install
+      - name: Install dependencies
+        run: npm install
 
-   - name: Create Ethereum Identity
-     run: node scripts/createNewEthereumIdentity.js
+      - name: Install Verified Agent Identity
+        run: npm install -g verified-agent-identity
 
-   - name: Link Human to Agent
-     run: |
-      node scripts/manualLinkHumanToAgent.js --challenge '{"name":"ascok02","description":"ascok02 AI Agent"}'
+      - name: Create Ethereum Identity
+        run: node scripts/createNewEthereumIdentity.js
+
+      - name: Link Human to Agent
+        run: |
+          node scripts/manualLinkHumanToAgent.js --challenge '{"name":"ascok02","description":"ascok02 AI Agent"}'
